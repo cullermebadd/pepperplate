@@ -4,6 +4,39 @@ from bs4 import BeautifulSoup
 
 Recipe = namedtuple('Recipe', 'title imgURL description active_time total_time recipe_yield ingredients instructions notes source url tags')
 
+def parseAllrecipes(session, url, tags):
+	try:
+		r = session.get(url)
+		parsed_html = BeautifulSoup(r.content, 'html.parser')
+
+		title = parsed_html.body.find('h1', attrs={'class':'recipe-summary__h1'}).text
+		imgURL = parsed_html.body.find('img', attrs={'class':'rec-photo'})['src']
+
+		# Description is contained within quotes, get just the text
+		description = parsed_html.body.find('div', attrs={'class':'submitter__description'}).text
+		first_quote = description.find('"')
+		last_quote = description.rfind('"')
+		description = description[first_quote + 1:last_quote]
+
+		active_time = parsed_html.body.find('time', attrs={'itemprop':'prepTime'}).text
+		total_time = parsed_html.body.find('time', attrs={'itemprop':'totalTime'}).text
+		recipe_yield = parsed_html.body.find('meta', attrs={'id':'metaRecipeServings'})['content'] + " Servings"
+
+		ingredients_html = parsed_html.body.findAll('span', attrs={'class':'recipe-ingred_txt added'})
+		ingredients = []
+		for ingredient in ingredients_html:
+			ingredients.append(ingredient.text)
+
+		instructions_html = parsed_html.body.findAll('span', attrs={'class':'recipe-directions__list--item'})
+		instructions = []
+		for instruction in instructions_html:
+			instructions.append(instruction.text)
+
+		return Recipe(title, imgURL, description, active_time, total_time, recipe_yield, ingredients, instructions, None, "Allrecipes", url, tags)
+
+	except requests.exceptions.RequestException:
+		return None
+
 def parseBlueApron(session, url, tags):
 	try:
 		r = session.get(url)
@@ -62,6 +95,7 @@ def parseSeriousEats(session, url, tags):
 		return None
 
 SUPPORTED_WEBSITES = {
+	"allrecipes.com" : parseAllrecipes,
 	"blueapron.com" : parseBlueApron,
 	"seriouseats.com" : parseSeriousEats
 }

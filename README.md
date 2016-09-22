@@ -3,6 +3,7 @@
 A python script to import recipes from various websites to a [Pepperplate](http://www.pepperplate.com/) account.
 
 ## Supported Recipe Websites
+* [Allrecipes](http://allrecipes.com/)
 * [Blue Apron](https://www.blueapron.com/cookbook)
 * [Serious Eats](http://www.seriouseats.com/recipes)
 
@@ -21,6 +22,7 @@ Input your Pepperplate login credentials and list of recipes with tags (optional
 pp_username = "user@example.com"
 pp_password = "password"
 recipes = {
+	"http://allrecipes.com/recipe/11853/orzo-with-parmesan-and-basil/" : ["side dish", "pasta"],
 	"https://www.blueapron.com/recipes/chicken-fresh-basil-fettuccine-with-tomato-cream-sauce" : ["dinner", "pasta", "chicken"],
 	"http://www.seriouseats.com/recipes/2013/12/the-food-lab-best-chocolate-chip-cookie-recipe.html" : ["dessert", "cookies"]
 }
