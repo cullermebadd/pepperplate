@@ -47,16 +47,16 @@ def pepperplateCreateRecipe(session, recipe):
 	try:
 		params = PP_CREATE_RECIPE_PARAMS[:]
 		params.extend([
-			("ctl00$cphMiddle$tbTitle", "%s %s" % (recipe.title, recipe.subtitle)),
+			("ctl00$cphMiddle$tbTitle", recipe.title),
 			("ctl00$cphMiddle$tbDescription", recipe.description),
 			("ctl00$cphMiddle$tbIngredients", '\n'.join(recipe.ingredients)),
 			("ctl00$cphMiddle$tbDirections", '\n'.join(recipe.instructions)),
 			("ctl00$cphMiddle$tbYield", recipe.recipe_yield),
-			("ctl00$cphMiddle$tbActiveTime", ""),
-			("ctl00$cphMiddle$tbTotalTime", recipe.cook_time),
+			("ctl00$cphMiddle$tbActiveTime", recipe.active_time),
+			("ctl00$cphMiddle$tbTotalTime", recipe.total_time),
 			("ctl00$cphMiddle$tbSource", recipe.source),
 			("ctl00$cphMiddle$tbUrl", recipe.url),
-			("ctl00$cphMiddle$tbNotes", "")
+			("ctl00$cphMiddle$tbNotes", recipe.notes)
 		])
 
 		# Add all the tags
