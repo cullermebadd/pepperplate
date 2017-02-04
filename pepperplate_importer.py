@@ -2,7 +2,6 @@ import requests
 import re
 import config
 import recipe_parser
-from bs4 import BeautifulSoup
 from progress.bar import Bar
 
 PP_LOGIN_URL = "https://www.pepperplate.com/login.aspx"
