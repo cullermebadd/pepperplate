@@ -1,0 +1,43 @@
+[
+	recipes: [
+		{
+			title: pasta,
+			description: ajs;fjsadf,
+			imgURL: www.sadfds,
+			active_time: 10,
+			total_time: 10,
+			recipe_yield: 3 servings,
+			ingredient_groups: [
+				{
+					"heading" : "For crust",
+					"items" : [
+						{
+							"quantity" : "3",
+							 "item" : "Fresno chiles, thinly sliced"
+						},
+						{
+							"quantity" : "2",
+							 "item" : "tomatoes"
+						}
+					]
+				},
+				{}
+			],
+			directions: [
+				{
+					"heading" : "for crust",
+					"directions" : [
+						"do something","do something else"
+					]
+				},
+				{
+					...
+				}
+			],
+			notes: asdffdsds,
+			source: Bon Appetit,
+			url: www.bonappetit.com,
+			tags: ["asd", "asdf"]
+		}
+	]
+]

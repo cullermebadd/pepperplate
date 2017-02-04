@@ -1,4 +1,5 @@
 import requests
+#import re
 from collections import namedtuple
 from bs4 import BeautifulSoup
 
@@ -36,6 +37,66 @@ def parseAllrecipes(session, url, tags):
 
 	except requests.exceptions.RequestException:
 		return None
+
+def printToFile(content):
+	f = open('out.txt', 'w')
+	#print >> f, 'Filename:', "test"  # or f.write('...\n')
+	f.write(content)
+	f.close()
+
+def parseBonAppetit(session, url, tags):
+	try:
+		r = session.get(url)
+		parsed_html = BeautifulSoup(r.content, 'html.parser')
+		#printToFile(parsed_html.prettify())
+
+		#title = parsed_html.find('meta', attrs={'property':'og:title'})['content']
+		title = parsed_html.find('h1', attrs={'class':'recipe__header__hed'}).text
+
+		imgURL = parsed_html.body.find('img', attrs={'class':'ba-picture--fit'})['srcset']
+		sources = []
+		#second_asset_pos = [m.start() for m in re.finditer('//assets', imgURL)]
+
+		second_asset_pos = imgURL.rfind('//assets')
+		source = "http:" + imgURL[0: second_asset_pos - 4] #//assets.bonappetit.com/photos/57acbbed1b33404414975141/16:9/w_940,c_limit/grilled-salsa-roja.jpg 1x,//assets...
+		# source = imgURL[0:commas[0]]
+		# sources.append(source)
+		#
+		# source = imgURL[commas[0]+1:commas[1]]
+		# sources.append(source)
+		#
+		# source = imgURL[commas[1]+1:commas[2]]
+		# sources.append(source)
+		#
+		# source = imgURL[commas[2]+1:len(imgURL)]
+		# sources.append(source)
+
+		#imgURL = None
+
+		description = parsed_html.body.find('h2', attrs={'class':'recipe__title__dek'}).text
+		active_time = None
+		total_time = None
+		recipe_yield = parsed_html.body.find('span', attrs={'class':'ingredients__totalservings'}).text
+
+		ingredients_html = parsed_html.body.findAll('li', attrs={'class':'ingredient'})
+		ingredients = []
+		for ingredient in ingredients_html:
+			ingredients.append(ingredient.text)
+
+		instructions_html = parsed_html.body.findAll('p', attrs={'class':'preparation__step'})
+		instructions = []
+		for instruction in instructions_html:
+			instructions.append(instruction.text)
+
+		#print("\n%s" % imgURL)
+		print("\n%s" % source)
+
+		return Recipe(title, source, description, active_time, total_time, recipe_yield, ingredients, instructions, None, "Bon Appetit", url, tags)
+		#return None
+
+	except requests.exceptions.RequestException:
+		return None
+
 
 def parseBlueApron(session, url, tags):
 	try:
@@ -97,5 +158,6 @@ def parseSeriousEats(session, url, tags):
 SUPPORTED_WEBSITES = {
 	"allrecipes.com" : parseAllrecipes,
 	"blueapron.com" : parseBlueApron,
-	"seriouseats.com" : parseSeriousEats
+	"seriouseats.com" : parseSeriousEats,
+	"bonappetit.com" : parseBonAppetit
 }
